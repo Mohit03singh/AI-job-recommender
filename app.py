@@ -13,16 +13,16 @@ import PyPDF2
 st.set_page_config(page_title="AI Job Recommender", page_icon="🤖", layout="wide")
 
 # --- API KEY ---
-# Aapko Streamlit Deploy karte waqt iski key secrets me daalni hogi.
-# Abhi ke liye hum isko sidebar me input karwa lenge.
+# When deploying Streamlit, you should store this key in Streamlit Secrets.
+# For now, we will take it as an input in the sidebar.
 st.sidebar.title("Configuration")
 groq_api_key = st.sidebar.text_input("Enter your Groq API Key", type="password")
 
-# --- CORE LOGIC (Copied from Colab) ---
+# --- CORE LOGIC ---
 
 @st.cache_resource
 def load_models_and_data():
-    """This function loads the embedding model and job data, and creates the vector store."""
+    """Loads the embedding model and job data, and creates the vector store."""
     # Load embedding model
     model_name = "BAAI/bge-small-en"
     model_kwargs = {"device": "cpu"}
@@ -101,7 +101,7 @@ def extract_text_from_pdf(pdf_file):
 
 # --- STREAMLIT UI ---
 st.title("🤖 AI-Powered Job Recommendation System")
-st.markdown("Discover your next career opportunity! [cite: 2, 4]")
+st.markdown("Discover your next career opportunity!")
 
 # Load data and models
 vector_store = load_models_and_data()
@@ -112,7 +112,7 @@ input_method = st.radio("Choose your input method:", ("Enter Details Manually", 
 user_query = ""
 
 if input_method == "Enter Details Manually":
-    st.subheader("Enter your details manually: [cite: 7]")
+    st.subheader("Enter your details manually:")
     skills = st.text_area("Your Skills (e.g., Python, React, Data Analysis)")
     experience = st.text_area("Your Experience (e.g., Fresher, 1 year in Java)")
     preferences = st.text_input("Your Preferences (e.g., Internship in Bangalore)")
@@ -126,7 +126,7 @@ if input_method == "Enter Details Manually":
             user_query = f"Skills: {skills}. Experience: {experience}. Preferences: {preferences}."
 
 elif input_method == "Upload Resume":
-    st.subheader("Upload your Resume (PDF only): [cite: 7]")
+    st.subheader("Upload your Resume (PDF only):")
     uploaded_file = st.file_uploader("Choose a PDF file", type="pdf")
     
     if st.button("Get Job Recommendations"):
@@ -147,7 +147,7 @@ if user_query:
         try:
             retrieval_chain = get_rag_chain(groq_api_key)
             response = retrieval_chain.invoke({"input": user_query})
-            st.subheader("Here are your personalized recommendations: ")
+            st.subheader("Here are your personalized recommendations:")
             st.markdown(response["answer"])
         except Exception as e:
             st.error(f"An error occurred: {e}. Please check your API key.")
