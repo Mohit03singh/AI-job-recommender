@@ -1,0 +1,7 @@
+streamlit
+langchain-groq
+langchain
+faiss-cpu
+langchain-community
+PyPDF2
+sentence-transformers
